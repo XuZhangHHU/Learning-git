@@ -1,0 +1,128 @@
+一.安装git环境（windows版本）
+	sudo apt-get install git
+
+二.创建版本库
+	
+	1.创建版本库的时候选择一个空的目录
+		创建版本库的命令行
+				mkdir learngit
+				cd learngit
+				pwd       //显示当前的目录
+	2.使用git init初始化命令将这个目录变成Git可以管理的仓库，同时会出现.git的目录，这个目录是Git来跟踪管理版本库的，不需要的时候千万不要动手改该目录，可能会将Git仓库给破坏掉。
+	3.将文件添加到版本库中，其实只能跟踪文本文件的改动，比如txt，网页，所有程序代码等等。
+	4.在创建的learngit目录下的写入相关的文件，使用下列命令进行文件的添加以及文件添加的相关信息
+		git add readme.txt 也可以添加多个 git add file1.c file2.html
+	  并且在进行上述操作之后使用 git commit -m "xxx"说明做了哪些改动
+
+三.时光穿梭
+	
+	1.git的主要功能就是管理文件，看文件的修改等情况 
+	  git status 命令可以掌握仓库的当前状态，当我们修改了readme文件之后，没有进行git add和git commit处理之后git statu会将近期所修改的文件显示出来。
+	  文件没有进行git add和git commit处理，可以通过git diff XXX查看文件的修改情况。
+	  当文件进行了git add和git commit处理，git tatus就不会提示文件系统修改后没有进行上述处理，同时git diff XXX也不会显示文件的修改情况。
+	2.使用git log 进行行提交日志的回顾，可以查看修改的提交情况 这样就会显示从最近到最远的日志更改情况。
+	  使用git log --pretty=oneline 这样所有的日志就会独行显示。
+	3.使用git reset --hard HEAD进行版本的控制 HEAD表示当前的版本 HEAD^表示上一个版本 HEAD^^表示回到上上一个版本。     如果想要回到上上面某个版本的话HEAD~xxx；如果知道对应操作的commit id号的话，就可以使用git reset -hard commitId。
+	commitId的查看使用git reflog进行查看并且可以回到相应的修改的版本。
+	4.可以通过cat XX对文件进行查看。
+	
+四.管理修改 
+	先对文件进行修改 -> git add xxx -> git commit -m "xxx" 这样的过程是一个即时修改即时保存修改内容的过程
+	同时对文件多次修改并成一起的话
+	对文件进行第一次修改->git add xxx->对文件进行第二次修改->git add xxx->git commit -m "xxx"进行文件的提交
+	
+	撤销对文件的修改（前提没有推送到远程库）
+	git checkout --fileName将该文件在工作区的修改全部撤销 两种情况1.自修改后还没有被放在暂放区，现在，撤销修改回和版本库一模一样的状态2.添加到暂放区后又作修改，现在撤销就回到暂放区的状态 一个是git add和git commit的两种状态
+	
+	git reset HEAD file可以将暂存区的修改撤销掉，重新放回工作区
+	
+	删除文件
+	1.一种确实要从文件库中删除该文件，那么就用git rm进行删除，并且使用git commit进行提交
+	git rm fileName
+	2.删错了，由于在版本库中还存在该文件，所以可以使用上面的撤销对文件的修改将文件恢复到先前的版本
+	git checkout --fileName将该文件在工作区的修改全部撤销
+
+五.远程仓库--GitHub
+	1.创建SSH Key 首先当本机开始的时候没有生成过SSH Key的时候，我们就需要使用命令生成本机的SSH Key的时候，我们就需要使用命令生成本机的SSH Key的时候，我们就需要使用命令生成本机的SSH
+	命令如下 
+	mkdir ~/.ssh
+	git config --global user.name "githubName"
+	git config --global user.name "githubEmail"
+	ssh-keygen -t rsa -C "githubEmail"
+	这样就会生成两个文件 一个id_rsa一个id_rsa.pub将id_rsa.pub中的内容复制粘贴到自己的github帐号中的SSH Key设置栏目中。
+	验证是否与管理库建立链接
+	ssh -T git@github.com 如果提示正确那么就连接成功
+	将本地的文件进行git add .以及git commit之后进行远程连接
+	
+	本地创建项目 正常文件传输的方式（push）
+	1) 创建目录
+	$ mkdir test
+	$ cd test
+	2) 初始化
+	$ git init
+	3) 创建hello.md文件
+	$ echo "这是一次测试test ssh key" > hello.md
+	4) 提交到本地
+	若出现如上warning提示则重新提交一次即可。
+	$ git add .   #提交当前目录下所以文件
+	$ git commit -m "add hello.md"   #提交记录说明 
+	5) 提交到github
+	$ git remote add origin ‘粘贴复制test ssh key的ssh路径’ 
+	$ git push -u origin master
+	
+	本地获取git上面的某个文件
+	git clone git@github.com:username/文件.git
+
+六.分支管理	
+	Git的分支管理
+	查看分支：git branch
+	创建分支：git branch branchName
+	切换分支：git checkout branchName
+	创建+切换分支:git checkout -b branchName
+	合并某分支到当前分支：git merge branchName
+	删除分支：git branch -d branchName
+	
+	分支管理的时候会出现冲突需要有冲突解决方案
+	git log --graph --pretty=online --abbrev-commit 查看冲突解决的方案
+	强制禁用fast forward模式的git merge
+	git merge --no--ff -m "" branchName
+	
+	BUG分支先将工作现场git stash 然后修复bug 修复bug后再git stash pop 回到工作现场
+	如果丢弃一个没有被合并过的分支，可以通过git branch -D branchName 进行删除
+	
+	使用git remote 查看远程库的信息 git remote -v查看详细的信息
+	推送分支 
+	git push origin master
+	git push origin dev
+	
+	多人协作的工作模式
+	1.首先使用 git push origin branchName推送修改
+	2.如果推送失败，可能远程的分支比本地的更加新，需要先用git pull试图合并（如果git pull提示no tracking information说明本地分支和远程分支的链接关系没有创建用命令git branch --set-upstream branchName origin/brachName）
+	3.如果有冲突则解决冲突，并在本地提交
+	4.没有冲突或者冲突被解决后，用git push origin branchName推送
+	
+七.版本管理（标签）
+	1.git tag v1.0用于新建一个标签 默认为HEAD 也可以指定一个commit id
+	2.git tag 查看标签
+	3.git tag -a<tagName> -m "blalal"可以指定标签信息
+	  git tag -s<>                    可以用PGP签名标签
+	
+	本地标签
+	git push origin <tagName> 推送一个本地标签
+	git push origin --tags  推送全部未推送过的本地标签
+	git tag -d <tagName> 删除一个本地标签
+	git push origin ：refs/tags/<tagname>可以删除一个远程标签
+
+八.Git服务器搭建
+	1.安装git；
+	2.创建一个git用户，用来运行git服务
+		sudo adduser git
+	3.创建证书登录 搜集需用登录的用户公钥id_rsa.pub文件，将所有的公钥导入/home/git/.ssh/authorized_keys文件中，一行一个。
+	4.初始化化Git仓库
+		选定一个目录作为git的仓库
+		sudo git init --bare xxx.git  这是一个裸仓库
+		sudo chown -R git:git xxx.git
+	5.禁用shell登录
+		编辑/etc/passwd文件完成
+		git:x:1001：1001：,,,:/home/git/:bin/bash 改为 git:x:1001：1001：,,,:/home/git/:bin/git-shell
+	

@@ -51,7 +51,7 @@
 	命令如下 
 	mkdir ~/.ssh
 	git config --global user.name "githubName"
-	git config --global user.name "githubEmail"
+	git config --global user.email "githubEmail"
 	ssh-keygen -t rsa -C "githubEmail"
 	这样就会生成两个文件 一个id_rsa一个id_rsa.pub将id_rsa.pub中的内容复制粘贴到自己的github帐号中的SSH Key设置栏目中。
 	验证是否与管理库建立链接

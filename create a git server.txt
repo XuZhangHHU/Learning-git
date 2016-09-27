@@ -1,0 +1,24 @@
+1.必须的git环境以及相关的ssh，vim
+	配置环境：
+	1.安装git环境  sudo apt-get install git-core
+	2.安装vim sudo apt-get install vim-gtk
+	3.安装ssh相关进程信息 sudo apt-get install openssh-server openssh-client
+2.环境配置完成之后进行git服务器的建设
+	1.sudo useradd -m projectname //创建项目名称
+	2.sudo passwd projectname XXXX //创建密码
+	3.创建访问者权限 
+	cd /home/git/
+	mkdir .ssh
+	chmod 700 .ssh
+	touch .ssh/authorized_keys
+	chmod 600 .ssh/authorized_keys
+	将访问者的公钥放入该文件中 隔行放入
+3.例子
+	1.创建一个例子
+	cd /home
+	mkdir mygit
+	chown git:git mygit/
+	cd mygit
+	git init --bare mygit.git
+	
+	git clone git@IPaddress:/home/mygit/mygit.git
